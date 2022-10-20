@@ -1,5 +1,6 @@
 # sqlmodel
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Ficoto/sqlmodel)](https://goreportcard.com/report/github.com/Ficoto/sqlmodel)
 [![MIT license](http://img.shields.io/badge/license-MIT-9d1f14)](http://opensource.org/licenses/MIT)
 
 sqlmodel is a generating model tool in Go
