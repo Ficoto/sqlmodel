@@ -175,12 +175,23 @@ func getType(fieldDescriptor fieldDescriptor) (goType string, err error) {
 }
 
 func getTag(fieldDescriptor fieldDescriptor, options options) string {
-	var tag string
-	switch options.tag {
-	case "gorm":
-		tag = fmt.Sprintf("`gorm:\"column:%s\"`", fieldDescriptor.Name)
+	var tagBuf bytes.Buffer
+	tagBuf.WriteString("`")
+	for i, tag := range options.tags {
+		if i != 0 {
+			tagBuf.WriteString(" ")
+		}
+		switch tag {
+		case "gorm":
+			tagBuf.WriteString(fmt.Sprintf("gorm:\"column:%s\"", fieldDescriptor.Name))
+		case "json":
+			tagBuf.WriteString(fmt.Sprintf("json:\"%s\"", fieldDescriptor.Name))
+		case "pg":
+			tagBuf.WriteString(fmt.Sprintf("pg:\"%s\"", fieldDescriptor.Name))
+		}
 	}
-	return tag
+	tagBuf.WriteString("`")
+	return tagBuf.String()
 }
 
 func generateTable(schemaFetcher schemaFetcher, dbName, tableName string, options options) error {
@@ -234,7 +245,7 @@ var (
 	outputPath         = flag.String("o", "", "file output path")
 	databaseConnection = flag.String("dbc", "", "database connection")
 	tables             = flag.String("t", "", "-t table1,table2,...")
-	tag                = flag.String("tag", "", "-tag gorm")
+	tag                = flag.String("tag", "", "-tag gorm,json,pg")
 	forcecases         = flag.String("forcecases", "", "-forcecases ID,IDs,HTML")
 )
 
@@ -253,7 +264,7 @@ func Generate(driverName string, exampleDataSourceName string) error {
 		options.tableNames = strings.Split(*tables, ",")
 	}
 	if len(*tag) != 0 {
-		options.tag = *tag
+		options.tags = strings.Split(*tag, ",")
 	}
 	if len(*forcecases) != 0 {
 		options.forceCases = strings.Split(*forcecases, ",")
