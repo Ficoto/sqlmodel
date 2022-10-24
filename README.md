@@ -9,5 +9,5 @@ sqlmodel is a generating model tool in Go
 ```
 $ go install github.com/Ficoto/sqlmodel/sqlm-gen-mysql
 $ mkdir -p generated/sqlm
-$ sqlm-gen-mysql -dbc root:123456@/database_name -o generated/sqlm
+$ sqlm-gen-mysql -dbc root:123456@tcp(123.0.0.1:3306)/database_name -o generated/sqlm
 ```
